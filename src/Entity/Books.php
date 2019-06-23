@@ -4,15 +4,13 @@ namespace Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
- * Class Authors
+ * Class Books
  * @ORM\Entity
- * @ORM\Table(name="authors")
+ * @ORM\Table(name="books")
  */
-class Authors
+class Books
 {
-
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -31,10 +29,9 @@ class Authors
     protected $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Books", inversedBy="authors")
-     * @ORM\JoinColumn(name="author_book")
+     * @ORM\ManyToMany(targetEntity="Authors", mappedBy="books")
      */
-    protected $books;
+    protected $authors;
 
 
     public function getId()
@@ -67,16 +64,21 @@ class Authors
         $this->description = $description;
     }
 
-    public function setBooks(Books $books = null)
+    public function addAuthors(Authors $authors)
     {
-        $this->books = $books;
+        $this->authors[] = $authors;
 
         return $this;
     }
 
-    public function getBooks()
+    public function removeAuthors(Authors $authors)
     {
-        return $this->books;
+        $this->authors->removeElement($authors);
+    }
+
+    public function getAuthors()
+    {
+        return $this->authors;
     }
 
 }
