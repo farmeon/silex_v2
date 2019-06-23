@@ -38,6 +38,10 @@ $app->register(new DoctrineServiceProvider, [
 ]);
 
 $app->register(new DoctrineOrmServiceProvider, [
+    'db.orm.class_path'            => __DIR__.'/../vendor/doctrine/orm/lib',
+    'db.orm.proxies_dir'           => __DIR__.'/../var/cache/doctrine/Proxy',
+    'db.orm.proxies_namespace'     => 'DoctrineProxy',
+    'db.orm.auto_generate_proxies' => true,
     'orm.em.options' => [
         'mappings' => [
             [
@@ -49,6 +53,10 @@ $app->register(new DoctrineOrmServiceProvider, [
         ],
     ],
 ]);
+
+
+
+
 
 $app->register(new LocaleServiceProvider());
 $app->register(new TranslationServiceProvider(), [
