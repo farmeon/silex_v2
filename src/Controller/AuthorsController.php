@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-use Entities\Authors;
+use Entity\Authors;
 use Silex\Application;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;

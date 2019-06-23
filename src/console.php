@@ -11,7 +11,7 @@ $console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption:
 $console->setDispatcher($app['dispatcher']);
 
 $console->setHelperSet(new Symfony\Component\Console\Helper\HelperSet(array(
-    'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($app['orm.em'])
+    'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($app['db.orm.em'])
 )));
 $console->addCommands(array(
     new \Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand,

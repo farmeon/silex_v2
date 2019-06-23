@@ -37,7 +37,7 @@ $app->register(new DoctrineServiceProvider, [
     ],
 ]);
 
-$app->register(new DoctrineOrmServiceProvider, [
+$app->register(new DoctrineORMServiceProvider(), array(
     'db.orm.class_path'            => __DIR__.'/../vendor/doctrine/orm/lib',
     'db.orm.proxies_dir'           => __DIR__.'/../var/cache/doctrine/Proxy',
     'db.orm.proxies_namespace'     => 'DoctrineProxy',
@@ -47,14 +47,12 @@ $app->register(new DoctrineOrmServiceProvider, [
             [
                 'type' => 'annotation',
                 'use_simple_annotation_reader' => false,
-                'namespace' => 'Entities',
-                'path' => __DIR__.'/Entities',
+                'namespace' => 'Entity',
+                'path' => __DIR__.'/Entity',
             ],
         ],
     ],
-]);
-
-
+));
 
 
 
