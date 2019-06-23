@@ -5,11 +5,14 @@ namespace Controller;
 use Entities\Authors;
 use Silex\Application;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Api\ControllerProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class AuthorsController extends AbstractController implements ControllerProviderInterface
 {
@@ -82,15 +85,27 @@ class AuthorsController extends AbstractController implements ControllerProvider
         }
 
         $form = $app['form.factory']->createBuilder(FormType::class, $author)
-            ->add('name')
-            ->add('description')
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(['min' => 5])
+                ]
+            ])
+            ->add('description', TextareaType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(['min' => 10])
+                ]
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Save',
             ])
             ->getForm();
 
         $form->handleRequest($request);
+
         if ($form->isValid()) {
+
             $app['orm.em']->flush();
             $app['session']->getFlashBag()->add('success', 'Author update success!');
 
@@ -116,10 +131,55 @@ class AuthorsController extends AbstractController implements ControllerProvider
         if (!$author) {
             $app->abort(404, 'No author found for id '.$id);
         }
+
         $app['orm.em']->remove($author);
         $app['orm.em']->flush();
 
         return $app->redirect($app['url_generator']->generate('author_index'));
+    }
+
+    /**
+     * Create author
+     * @param Application $app
+     * @param Request $request
+     * @return mixed
+     */
+    public function create(Application $app, Request $request)
+    {
+        $author = new Authors();
+
+        $form = $app['form.factory']->createBuilder(FormType::class, $author)
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(['min' => 5])
+                ]
+            ])
+            ->add('description', TextareaType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(['min' => 10])
+                ]
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Save',
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $app['orm.em']->persist($author);
+            $app['orm.em']->flush();
+
+            return $app->redirect($app['url_generator']->generate('author_show', ['id' => $author->getId()]));
+        }
+
+        return $app['twig']->render('/admin/authors/create.html.twig', [
+            'author' => $author,
+            'form' => $form->createView()
+        ]);
     }
 
 }

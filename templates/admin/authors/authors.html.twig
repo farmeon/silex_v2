@@ -1,5 +1,10 @@
 {% extends 'layout.html.twig' %}
 
+
+{% block menu %}
+    <a href="{{ path('author_insert') }}">Добавить автора</a>
+{% endblock %}
+
 {% block content %}
     <ul>
         {% for author in authors %}
